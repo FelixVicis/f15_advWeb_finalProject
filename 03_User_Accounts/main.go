@@ -4,16 +4,14 @@ import (
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
 
-	"appengine"
-	"appengine/blobstore"
 	"encoding/json"
 	"github.com/nu7hatch/gouuid"
 	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/appengine"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/memcache"
 )
@@ -30,18 +28,18 @@ func init() {
 	r.POST("/api/createuser", createUser)       // signup has posted to api
 	r.POST("/api/login", loginProcess)          // login has posted to api
 	r.GET("/api/logout", logout)                // logout has posted to api
-	r.get("/failure", failure)                  // a step has gone awry
+	r.GET("/failure", failure)                  // a step has gone awry
 
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
 
-	tpl = template.Must(tpl.ParseGlob("templates/html/*.html"))
+	tpl = template.Must(tpl.ParseGlob("public/templates/*.html"))
 }
 
 // ROOT ===================================================================================================
 
 func home(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
-	ctx := appengine.NewContext(req)
+	//ctx := appengine.NewContext(req)
 	// get session
 	memItem, err := getSession(req)
 	var sd Session
@@ -116,7 +114,6 @@ func createUser(res http.ResponseWriter, req *http.Request, _ httprouter.Params)
 	ctx := appengine.NewContext(req)
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.FormValue("password")), bcrypt.DefaultCost)
 	if err != nil {
-		log.Errorf(ctx, "error creating password: %v", err)
 		http.Error(res, err.Error(), 500)
 		return
 	}
@@ -128,7 +125,6 @@ func createUser(res http.ResponseWriter, req *http.Request, _ httprouter.Params)
 	key := datastore.NewKey(ctx, "Users", user.UserName, 0, nil)
 	key, err = datastore.Put(ctx, key, &user)
 	if err != nil {
-		log.Errorf(ctx, "error adding todo: %v", err)
 		http.Error(res, err.Error(), 500)
 		return
 	}
@@ -148,12 +144,10 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 	ctx := appengine.NewContext(req)
 	bs, err := ioutil.ReadAll(req.Body)
 	sbs := string(bs)
-	log.Infof(ctx, "REQUEST BODY: %v", sbs)
 	var user User
 	key := datastore.NewKey(ctx, "Users", sbs, 0, nil)
 	err = datastore.Get(ctx, key, &user)
 	// if there is an err, there is NO user
-	log.Infof(ctx, "ERR: %v", err)
 	if err != nil {
 		// there is an err, there is a NO user
 		fmt.Fprint(res, "false")
@@ -182,7 +176,6 @@ func createSession(res http.ResponseWriter, req *http.Request, user User) {
 	// SET MEMCACHE session data (sd)
 	json, err := json.Marshal(user)
 	if err != nil {
-		log.Errorf(ctx, "error marshalling during user creation: %v", err)
 		http.Error(res, err.Error(), 500)
 		return
 	}

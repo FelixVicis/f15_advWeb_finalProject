@@ -12,8 +12,8 @@
         <a href="/">HOME</a>
         <nav>
             {{if .LoggedIn}}
-                <p>You are logged in, {{.Username}}</p>
-                <a href="/logout"><p class="loginOut">Log Out</p></a>
+                <p>You are logged in, {{.UserName}}</p>
+                <p><a href="/logout"><p class="loginOut">Log Out</p></a></p>
             {{else}}
                 <a href="/login"><p class="loginOut">Log In</p></a>
             {{end}}

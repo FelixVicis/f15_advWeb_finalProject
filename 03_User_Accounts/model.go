@@ -12,7 +12,7 @@ import "time"
 
 type User struct {
 	Email    string
-	Username string `datastore:"-"`
+	UserName string `datastore:"-"`
 	Password string `json:"-"` // hash string
 }
 
