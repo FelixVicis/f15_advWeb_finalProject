@@ -1,21 +1,20 @@
 p {
-    color: darkslategrey;
+    color: white;
 }
 
 span {
-    color: inherit;
+    color: white;
 }
 
 img {
-    width:100px;
-    height:100px;
+    width:200px;
+    height:200px;
 }
 
 table, td {
     border: 1px #70b8ff solid;
 }
 
- 
 .wrapper {
   display: -webkit-box;
   display: -moz-box;
@@ -35,7 +34,7 @@ table, td {
   flex: 1 100%;
 }
 
-/*
+
 .header {
   background: Gainsboro;
 }
@@ -45,7 +44,7 @@ table, td {
 }
 
 .main {
-  text-align: left;
+  text-align: center;
   background: White;
 }
 
@@ -72,4 +71,4 @@ table, td {
 body {
   padding: 2em; 
 }
-*/
+
