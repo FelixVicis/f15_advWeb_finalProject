@@ -1,18 +1,35 @@
-p {
-    color: white;
-}
-
 span {
     color: white;
 }
 
 img {
-    width:200px;
-    height:200px;
+    width:160px;
+    height:160px;
+}
+
+thead {
+    font-family: garamond, sans-serif;
+    color: silver;
 }
 
 table, td {
-    border: 1px #70b8ff solid;
+    border: 2px LightGray solid;
+    margin: auto;
+}
+
+button {
+    height: 50px;
+    width: 120px;
+    border-color: dimgray;
+    background-color: gainsboro;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 5px;
+}
+
+a {
+    text-decoration: none;
+    color: darkgreen;
 }
 
 .wrapper {
@@ -37,23 +54,30 @@ table, td {
 
 .header {
   background: Gainsboro;
+  font-family: garamond, sans-serif;
 }
 
 .footer {
   background: DarkSeaGreen;
+  font-family: garamond, sans-serif;
 }
 
 .main {
   text-align: center;
   background: White;
+  font-family: garamond, sans-serif;
 }
 
 .aside-1 {
   background: Azure;
+  font-family: garamond, sans-serif;
+  color: silver;
 }
 
 .aside-2 {
   background: HoneyDew;
+  font-family: garamond, sans-serif;
+  color: silver;
 }
 
 @media all and (min-width: 600px) {

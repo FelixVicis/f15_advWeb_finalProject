@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e4640150-3ad9-4b0d-8604-b219b43016d0" name="Default" comment="">
-      <change type="DELETED" beforePath="C:\Users\Lori\Documents\Code\GoWorkspace\src\github.com\PCPrincess\f15_advWeb_finalProject\03_User_Accounts\teplates.go" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/GOPATH__f15_advWeb_finalProject_.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Go_SDK.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/01_Front_End/Skeleton.html" afterPath="$PROJECT_DIR$/01_Front_End/Skeleton.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/f15_advWeb_finalProject.iml" afterPath="$PROJECT_DIR$/.idea/f15_advWeb_finalProject.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css" afterPath="$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -24,28 +27,46 @@
     <favorites_list name="f15_advWeb_finalProject" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Skeleton.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/01_Front_End/Skeleton.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-19.576923">
-              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.56534094">
+      <split-first>
+        <leaf>
+          <file leaf-file-name="Skeleton.html" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/01_Front_End/Skeleton.html">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.55520993">
+                  <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="62" column="1" selection-start-line="62" selection-start-column="1" selection-end-line="62" selection-end-column="1" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file leaf-file-name="stylesheet.css" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="1.5082213">
+                  <caret line="67" column="2" selection-start-line="67" selection-start-column="2" selection-end-line="67" selection-end-column="2" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -75,10 +96,10 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="123" />
-    <option name="y" value="36" />
+    <option name="x" value="196" />
+    <option name="y" value="11" />
     <option name="width" value="1242" />
-    <option name="height" value="800" />
+    <option name="height" value="832" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -133,38 +154,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="03_User_Accounts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="f15_advWeb_finalProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="f15_advWeb_finalProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="02_Front_End_Ajax" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="public" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="f15_advWeb_finalProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="f15_advWeb_finalProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="01_Front_End" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -192,7 +181,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider$1" />
+    <property name="settings.editor.selected.configurable" value="editing.templates" />
     <property name="configurable.Global.libraries.is.expanded" value="true" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -201,6 +190,10 @@
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="FullScreen" value="false" />
     <property name="GO_FMT" value="false" />
+    <property name="last_opened_file_path" value="C:/Go" />
+    <property name="go.libraries.notification.had.been.shown" value="true" />
+    <property name="configurable.Project.libraries.is.expanded" value="true" />
+    <property name="configurable.Module.libraries.is.expanded" value="false" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
@@ -297,31 +290,37 @@
       <option name="project" value="LOCAL" />
       <updated>1448078797525</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="teplates.go renamed to templates.go">
+      <created>1448316873225</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1448316873225</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="123" y="36" width="1242" height="800" extended-state="0" />
-    <editor active="false" />
+    <frame x="196" y="11" width="1242" height="832" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13866232" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13866232" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30327868" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -340,7 +339,8 @@
     <MESSAGE value="Added Flex-Box" />
     <MESSAGE value="Adding, Editing, Learning - Just Basic HTML-CSS.  Looking forward to really spicing this up.  Absolutely just putting stuff 'out there' to get the juices flowing." />
     <MESSAGE value="Removed unnecessary comments. &#10;P.S. Merging your repo should allow you to view the skeleton.html file in your browser." />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary comments. &#10;P.S. Merging your repo should allow you to view the skeleton.html file in your browser." />
+    <MESSAGE value="teplates.go renamed to templates.go" />
+    <option name="LAST_COMMIT_MESSAGE" value="teplates.go renamed to templates.go" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -371,10 +371,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/01_Front_End/Skeleton.html">
+    <entry file="file://$PROJECT_DIR$/03_User_Accounts/templates.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-19.576923">
-          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.64050233">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -382,7 +382,15 @@
     <entry file="file://$PROJECT_DIR$/01_Front_End/public/scripts/stylesheet.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <caret line="62" column="1" selection-start-line="62" selection-start-column="1" selection-end-line="62" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/01_Front_End/Skeleton.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.55520993">
+          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
           <folding />
         </state>
       </provider>
