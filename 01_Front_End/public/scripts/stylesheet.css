@@ -3,13 +3,8 @@ span {
 }
 
 img {
-    width:160px;
-    height:160px;
-}
-
-thead {
-    font-family: garamond, sans-serif;
-    color: silver;
+    width:64px;
+    height:64px;
 }
 
 table, td {
@@ -93,6 +88,6 @@ a {
 }
 
 body {
-  padding: 2em; 
+  /*padding: 2em;*/
 }
 
