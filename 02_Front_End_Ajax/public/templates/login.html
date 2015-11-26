@@ -1,0 +1,122 @@
+{{template "header"}}
+{{template "header2" .}}
+  <div class="formcontrols">
+    <input id="defaultRadio" type="radio" name="login-signup" value="Login">Login <br>
+    <input type="radio" name="login-signup" value="Signup">Signup <br>
+  </div>
+  <div class="loginForm">
+    <form method="POST" action="/api/login">
+        <i class="fa fa-user fa-5x"></i>
+        <input id="userNamel" name="userName" placeholder="Enter your user name" autofocus>
+        <p class="form-field-err"></p>
+        <input id="passwordl" name="password" type="password" placeholder="Enter your password">
+        <p class="form-field-err"></p>
+        <button class='accsubmit'>Submit</button>
+    </form>
+  </div>
+  <div class="signupForm">
+    <form method="POST" action="/api/createuser" id="form-create-user">
+        <i class="fa fa-user fa-5x"></i>
+        <input id="email" name="email" type="email" placeholder="Enter your email" autofocus>
+        <p class="form-field-err"></p>
+        <input id="userName" name="userName" placeholder="Enter a twitter name" autocomplete="off">
+        <p class="form-field-err" id="username-err"></p>
+        <input id="password" name="password" type="password" placeholder="Create your password">
+        <input id="password2" name="password2" type="password" placeholder="Retype your password">
+        <p class="form-field-err" id="password-err"></p>
+        <button id="btn-create-account" class='accsubmit'>Create Account</button>
+    </form>
+  </div>
+
+  <script>
+      var formUser = document.querySelector('#form-create-user');
+      var userName = document.querySelector('#userName');
+      var p1 = document.querySelector('#password');
+      var p2 = document.querySelector('#password2');
+      var btnSubmit = document.querySelector('#btn-create-account');
+      var nameErr = document.querySelector('#username-err');
+      var pErr = document.querySelector('#password-err');
+      //    username must be unique
+      userName.addEventListener('input', function(){
+          console.log(userName.value);
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', '/api/checkUserName');
+          xhr.send(userName.value);
+          xhr.addEventListener('readystatechange', function(){
+              if (xhr.readyState === 4) {
+                  var item = xhr.responseText;
+                  console.log(item);
+                  if (item == 'true') {
+                      nameErr.textContent = 'Username taken - Try another name!';
+                  } else {
+                      nameErr.textContent = '';
+                  }
+              }
+          });
+      });
+      //    Validate passwords
+      //    listen for submit button click
+      formUser.addEventListener('submit', function(e){
+          var ok = validatePasswords();
+          if (!ok) {
+              e.preventDefault();
+              return;
+          }
+      });
+      function validatePasswords() {
+          pErr.textContent = '';
+          if (p1.value === '') {
+              pErr.textContent = 'Enter a password.';
+              return false;
+          }
+          if (p1.value !== p2.value) {
+              pErr.textContent = 'Your passwords did not match. Please re-enter your passwords.';
+              p1.value = '';
+              p2.value = '';
+              return false;
+          }
+          return true;
+      };
+
+    var lsvalue = 'Login';
+    (function(){
+      $("#defaultRadio").prop("checked", true)
+      $("input:radio[name=login-signup]").click(function() {
+        lsvalue = $(this).val();
+        if(lsvalue == 'Login'){
+          $('.loginForm').css('display', 'block');
+          $('.signupForm').css('display', 'none');
+        } else {
+          $('.loginForm').css('display', 'none');
+          $('.signupForm').css('display', 'block');
+        }
+      });
+      $('.accsubmit').click(function(){
+        if(lsvalue == 'Login') {
+          //login
+          $.ajax({
+            url: "/api/login",
+            type: "POST",
+            data: {},
+          });
+        } else if(lsvalue == 'Signup') {
+          //signup
+          $.ajax({
+            url: "/api/signup",
+            type: "POST",
+            data: {},
+          });
+        } else {
+          // something wacky happened
+          console.log('Error: form not recognized');
+        }
+      });
+    })();
+  </script>
+
+  <style media="screen">
+    .signupForm {
+      display: none;
+    }
+  </style>
+{{template "footer"}}

@@ -1,0 +1,28 @@
+{{define "header"}}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+{{end}}
+
+{{define "header2"}}</head>
+<body>
+<div id="top">
+    <header>
+        <a href="/">HOME</a>
+        <nav>
+            {{if .LoggedIn}}
+                <p>You are logged in, {{.UserName}}</p>
+                <p><a href="/logout"><p class="loginOut">Log Out</p></a></p>
+            {{else}}
+                <a href="/login"><p class="loginOut">Log In</p></a>
+            {{end}}
+        </nav>
+    </header>
+</div>
+{{end}}
+
+
+{{ define "footer" }}</body></html>
+{{ end }}
