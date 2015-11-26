@@ -4,16 +4,81 @@ package main
 api.go by Allen J. Mills
     CREATION: 11.17.15
     COMPLETION: mm.dd.yy
-
-
 */
-
 import (
 	"fmt"
+	"github.com/julienschmidt/httprouter"
+	"golang.org/x/crypto/bcrypt"
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/datastore"
+	"google.golang.org/appengine/memcache"
+	"io/ioutil"
+	"net/http"
+	"time"
 )
 
-func main() {
-	fmt.Println("")
+func loginProcess(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	ctx := appengine.NewContext(req)
+	key := datastore.NewKey(ctx, "Users", req.FormValue("userName"), 0, nil)
+	var user User
+	err := datastore.Get(ctx, key, &user)
+	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.FormValue("password"))) != nil {
+		// failure logging in
+		http.Redirect(res, req, "/failure", 302)
+		// var sd Session
+		// sd.LoginFail = true
+		// tpl.ExecuteTemplate(res, "login.html", sd)
+		return
+	} else {
+		user.UserName = req.FormValue("userName")
+		// success logging in
+		createSession(res, req, user)
+		// redirect
+		http.Redirect(res, req, "/", 302)
+	}
+}
+
+func logout(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	ctx := appengine.NewContext(req)
+
+	cookie, err := req.Cookie("session")
+	// cookie is not set
+	if err != nil {
+		http.Redirect(res, req, "/failure", 302)
+		return
+	}
+
+	// clear memcache
+	sd := memcache.Item{
+		Key:        cookie.Value,
+		Value:      []byte(""),
+		Expiration: time.Duration(1 * time.Microsecond),
+	}
+	memcache.Set(ctx, &sd)
+
+	// clear the cookie
+	cookie.MaxAge = -1
+	http.SetCookie(res, cookie)
+
+	// redirect
+	http.Redirect(res, req, "/", 302)
+}
+
+func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	ctx := appengine.NewContext(req)
+	bs, err := ioutil.ReadAll(req.Body)
+	sbs := string(bs)
+	var user User
+	key := datastore.NewKey(ctx, "Users", sbs, 0, nil)
+	err = datastore.Get(ctx, key, &user)
+	// if there is an err, there is NO user
+	if err != nil {
+		// there is an err, there is a NO user
+		fmt.Fprint(res, "false")
+		return
+	} else {
+		fmt.Fprint(res, "true")
+	}
 }
 
 /*

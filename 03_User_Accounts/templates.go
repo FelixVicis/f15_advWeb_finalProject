@@ -12,7 +12,7 @@ import (
 )
 
 func serveTemplate(res http.ResponseWriter, req *http.Request, templateName string) {
-	memItem, err := getSession(req)
+	sess, err := getSession(req)
 	if err != nil {
 		// not logged in
 		tpl.ExecuteTemplate(res, templateName, Session{})
@@ -20,7 +20,7 @@ func serveTemplate(res http.ResponseWriter, req *http.Request, templateName stri
 	}
 	// logged in
 	var sd Session
-	json.Unmarshal(memItem.Value, &sd)
+	json.Unmarshal(sess.Value, &sd)
 	sd.LoggedIn = true
 	tpl.ExecuteTemplate(res, templateName, &sd)
 }
