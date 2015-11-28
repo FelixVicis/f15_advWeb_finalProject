@@ -7,8 +7,12 @@ img {
     height:64px;
 }
 
-table, td {
+td {
     border: 2px LightGray solid;
+    margin: auto;
+}
+
+table {
     margin: auto;
 }
 
@@ -89,5 +93,7 @@ a {
 
 body {
   /*padding: 2em;*/
-}
+    left: 0;
+    margin: 0;
+ }
 

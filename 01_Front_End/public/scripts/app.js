@@ -2,8 +2,8 @@
  * Created by PCPrincess on 11/25/2015.
  */
 var main = function() {
-    $('.icon-menu').click(function() {
-        $('.dropdown-menu').toggle();
+    $('').click(function () {
+
     });
 }
 
