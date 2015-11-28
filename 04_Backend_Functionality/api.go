@@ -10,8 +10,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/appengine"
+	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/memcache"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -82,8 +84,34 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 }
 
 /* Blobstore Section ----------------------------------------- */
-func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+// BLOB ======================================================================================================
+var uploadTemplate = template.Must(template.New("root").Parse(uploadTemplateHTML))
+
+const uploadTemplateHTML = `
+<html><body>
+<form action="{{.}}" method="POST" enctype="multipart/form-data">
+Upload File: <input type="file" name="file"><br>
+<input type="submit" name="submit" value="Submit">
+</form></body></html>
+`
+
+func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	ctx := appengine.NewContext(req)
+	uploadURL, err := blobstore.UploadURL(ctx, "/upload", nil)
+	if err != nil {
+		http.Redirect(res, req, "/failure/bloburlissue", 302)
+		return
+	}
+	res.Header().Set("Content-Type", "text/html")
+	err = uploadTemplate.Execute(res, uploadURL)
+	if err != nil {
+		http.Redirect(res, req, "/failure/uploadtemplateissue", 302)
+		return
+	}
+}
+
+func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	//ctx := appengine.NewContext(req)
 
 	// cookie, err := req.Cookie("session")
 	// // cookie is not set
@@ -92,16 +120,17 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 	// 	return
 	// }
 
-	blobs, _, err := blobstore.ParseUpload(r)
+	blobs, _, err := blobstore.ParseUpload(req)
 	if err != nil {
-		serveError(ctx, res, err)
+		//serveError(ctx, res, err)
+		http.Redirect(res, req, "/failure/blobissue", 302)
 		return
 	}
 
 	file := blobs["file"]
 	if len(file) == 0 {
-		ctx.Errorf("no file uploaded")
-		http.Redirect(res, req, "/failure", 302)
+		//ctx.Errorf("no file uploaded")
+		http.Redirect(res, req, "/failure/noblobfound", 302)
 		return
 	}
 

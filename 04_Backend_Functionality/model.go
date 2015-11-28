@@ -8,7 +8,7 @@ model.go by Allen J. Mills
     This will serve as the file holding
     the structures for our application.
 */
-import "time"
+//import "time"
 
 type User struct {
 	Email    string

@@ -59,11 +59,6 @@ func signup(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	serveTemplate(res, req, "signup.html")
 }
 
-// BLOB ======================================================================================================
-func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	serveTemplate(res, req, "upload.html")
-}
-
 // HELPERS ===================================================================================================
 
 func failure(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
