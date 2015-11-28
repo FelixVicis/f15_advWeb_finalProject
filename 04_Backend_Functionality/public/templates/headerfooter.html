@@ -1,0 +1,30 @@
+{{define "header"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HOME</title>
+</head>
+{{end}}
+
+{{define "header2"}}
+<body>
+<div id="top">
+    <header>
+        <a href="/">HOME</a>
+        <nav>
+            {{if .LoggedIn}}
+            <p>You are logged in, {{.User.UserName}}</p>
+            <p><a href="/logout"><p class="loginOut">Log Out</p></a></p>
+            {{else}}
+            <a href="/login"><p class="loginOut">Log In</p></a>
+            {{end}}
+        </nav>
+        <p>SAVED DATA: {{.}}</p>
+    </header>
+</div>
+{{end}}
+
+{{ define "footer" }}
+</body></html>
+{{ end }}

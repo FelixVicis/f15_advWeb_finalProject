@@ -8,22 +8,17 @@ model.go by Allen J. Mills
     This will serve as the file holding
     the structures for our application.
 */
+import "time"
 
 type User struct {
 	Email    string
-	Username string
-	Password string // hash string
-}
-
-type Session struct {
-	User
-	LoggedIn bool
-	viewing  string
+	UserName string `datastore:"-"`
+	Password string `json:"-"` // hash string
 }
 
 type blobbedImage struct {
-	BlobId   string // blobid of image
-	URL      string // ulr of image
-	UsrEmail string // email of uploaded user
-	Uploaded string // time
+	BlobId   string    // blobid of image
+	URL      string    // ulr of image
+	UsrEmail string    // email of uploaded user
+	Uploaded time.Time // time
 }

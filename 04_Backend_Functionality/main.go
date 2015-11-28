@@ -1,85 +1,61 @@
 package main
 
 import (
+	"encoding/json"
+	"github.com/julienschmidt/httprouter"
 	"html/template"
-	"io"
 	"net/http"
-
-	"appengine"
-	"appengine/blobstore"
 )
 
-func serveError(c appengine.Context, w http.ResponseWriter, err error) {
-	w.WriteHeader(http.StatusInternalServerError)
-	w.Header().Set("Content-Type", "text/plain")
-	io.WriteString(w, "Internal Server Error")
-	c.Errorf("%v", err)
-}
-
-var rootTemplate = template.Must(template.New("root").Parse(rootTemplateHTML))
-
-const rootTemplateHTML = `
-<html><body>
-<form action="{{.}}" method="POST" enctype="multipart/form-data">
-Upload File: <input type="file" name="file"><br>
-<input type="submit" name="submit" value="Submit">
-</form></body></html>
-`
-
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-	uploadURL, err := blobstore.UploadURL(c, "/upload", nil)
-	if err != nil {
-		serveError(c, w, err)
-		return
-	}
-	w.Header().Set("Content-Type", "text/html")
-	err = rootTemplate.Execute(w, uploadURL)
-	if err != nil {
-		c.Errorf("%v", err)
-	}
-}
-
-func handleServe(w http.ResponseWriter, r *http.Request) {
-	blobstore.Send(w, appengine.BlobKey(r.FormValue("blobKey")))
-}
-
-func handleUpload(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-	blobs, _, err := blobstore.ParseUpload(r)
-	if err != nil {
-		serveError(c, w, err)
-		return
-	}
-	file := blobs["file"]
-	if len(file) == 0 {
-		c.Errorf("no file uploaded")
-		http.Redirect(w, r, "/", http.StatusFound)
-		return
-	}
-	http.Redirect(w, r, "/serve/?blobKey="+string(file[0].BlobKey), http.StatusFound)
-}
+var tpl *template.Template
 
 func init() {
-	http.HandleFunc("/", handleRoot)
-	http.HandleFunc("/serve/", handleServe)
-	http.HandleFunc("/upload", handleUpload)
+	r := httprouter.New()
+	r.GET("/", home)                            // root
+	r.GET("/login", login)                      // public user has requested a login.
+	r.GET("/logout", logout)                    // signed in user has requested a log out
+	r.GET("/signup", signup)                    // public user has requested a new user
+	r.POST("/api/checkusername", checkUserName) // form has posted to api, check username
+	r.POST("/api/createuser", createUser)       // signup has posted to api
+	r.POST("/api/login", loginProcess)          // login has posted to api
+	r.GET("/api/logout", logout)                // logout has posted to api
+	r.GET("/failure", failure)                  // a step has gone awry
+
+	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
+	http.Handle("/", r)
+
+	tpl = template.Must(tpl.ParseGlob("public/templates/*.html"))
 }
 
-/*
-okay, so handle upload seems to be the most work here.
-what we could do is change this so a user and user-url setup is created.
-datastore can hold the blobkey 0 user-url combo.
+// ROOT ===================================================================================================
 
-2 tables + blobstore:
-users
-	username
-	email
+func home(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	//ctx := appengine.NewContext(req)
+	// get session
+	memItem, err := getSession(req)
+	var sd Session
+	if err == nil {
+		// logged in
+		json.Unmarshal(memItem.Value, &sd)
+		sd.LoggedIn = true
+	}
+	tpl.ExecuteTemplate(res, "home.html", &sd)
+}
 
-usr-images
-	blobid
-	email
-	usr-url
+// LOGIN/LOGOUT ==============================================================================================
 
-mandate login for upload. otherwise do not allow.
-*/
+func login(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	serveTemplate(res, req, "login.html")
+}
+
+// NEW USER ===================================================================================================
+
+func signup(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	serveTemplate(res, req, "signup.html")
+}
+
+// HELPERS ===================================================================================================
+
+func failure(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	serveTemplate(res, req, "failure.html")
+}
