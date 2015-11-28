@@ -13,7 +13,6 @@ import (
 	"google.golang.org/appengine/blobstore"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/memcache"
-	"html/template"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -85,57 +84,48 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 
 /* Blobstore Section ----------------------------------------- */
 // BLOB ======================================================================================================
-var uploadTemplate = template.Must(template.New("root").Parse(uploadTemplateHTML))
-
-const uploadTemplateHTML = `
-<html><body>
-<form action="{{.}}" method="POST" enctype="multipart/form-data">
-Upload File: <input type="file" name="file"><br>
-<input type="submit" name="submit" value="Submit">
-</form></body></html>
-`
 
 func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	ctx := appengine.NewContext(req)
 	uploadURL, err := blobstore.UploadURL(ctx, "/upload", nil)
 	if err != nil {
-		http.Redirect(res, req, "/failure/bloburlissue", 302)
+		serveTemplateWithParams(res, req, "falure.html", "BLOB URL ERROR")
 		return
 	}
-	res.Header().Set("Content-Type", "text/html")
-	err = uploadTemplate.Execute(res, uploadURL)
-	if err != nil {
-		http.Redirect(res, req, "/failure/uploadtemplateissue", 302)
-		return
-	}
+	serveTemplateWithParams(res, req, "upload.html", uploadURL)
 }
 
 func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	//ctx := appengine.NewContext(req)
-
-	// cookie, err := req.Cookie("session")
-	// // cookie is not set
-	// if err != nil {
-	// 	http.Redirect(res, req, "/failure", 302)
-	// 	return
-	// }
-
 	blobs, _, err := blobstore.ParseUpload(req)
 	if err != nil {
-		//serveError(ctx, res, err)
-		http.Redirect(res, req, "/failure/blobissue", 302)
+		serveTemplateWithParams(res, req, "falure.html", "BLOB PARSE ERROR")
 		return
 	}
 
 	file := blobs["file"]
 	if len(file) == 0 {
-		//ctx.Errorf("no file uploaded")
-		http.Redirect(res, req, "/failure/noblobfound", 302)
+		serveTemplateWithParams(res, req, "falure.html", "NO BLOBS FOUND")
 		return
 	}
 
-	// redirect
-	http.Redirect(res, req, "/", 302)
+	// here is where we would tie the user to the blob file
+	http.Redirect(res, req, "/api/image/"+string(file[0].BlobKey), http.StatusFound)
+	//http.Redirect(res, req, "/", 302)
+}
+
+func apiImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	//serveTemplateWithParams(res, req, "falure.html", ps.ByName("blobKey"))
+	blobstore.Send(res, appengine.BlobKey(ps.ByName("blobKey")))
+
+	// we've left off here. we can now, using a blobkey, request an image.
+	// I 'think' this will work as an independant call inside a webpage for hosting.
+	// we will see.
+
+	// next time:
+	// finish apiImage to serve as a internal call for blobkey
+	// see if this will host serve the image itself or if it's a web page.
+	// tie this into the session and blobbedImage bits.
+	// get this into the datastore.
 }
 
 /*

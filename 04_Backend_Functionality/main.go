@@ -26,6 +26,8 @@ func init() {
 	r.POST("/upload", uploadToBlob) // User has submitted a file to the blob
 	r.GET("/upload", uploadForm)    // User has requested a submission
 
+	r.GET("/api/image/:blobKey", apiImage)
+
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
 
@@ -61,6 +63,6 @@ func signup(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 
 // HELPERS ===================================================================================================
 
-func failure(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	serveTemplate(res, req, "failure.html")
+func failure(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	serveTemplateWithParams(res, req, "falure.html", "NO MESSAGE AVAILABLE")
 }

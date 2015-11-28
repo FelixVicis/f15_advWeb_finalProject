@@ -24,3 +24,7 @@ func serveTemplate(res http.ResponseWriter, req *http.Request, templateName stri
 	sd.LoggedIn = true
 	tpl.ExecuteTemplate(res, templateName, &sd)
 }
+
+func serveTemplateWithParams(res http.ResponseWriter, req *http.Request, templateName string, params interface{}) {
+	tpl.ExecuteTemplate(res, templateName, &params)
+}
