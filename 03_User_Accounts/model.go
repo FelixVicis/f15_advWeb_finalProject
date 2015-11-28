@@ -16,12 +16,6 @@ type User struct {
 	Password string `json:"-"` // hash string
 }
 
-type Session struct {
-	User
-	LoggedIn bool
-	viewing  string
-}
-
 type blobbedImage struct {
 	BlobId   string    // blobid of image
 	URL      string    // ulr of image
