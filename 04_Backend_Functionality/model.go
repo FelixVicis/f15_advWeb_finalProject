@@ -17,8 +17,8 @@ type User struct {
 }
 
 type blobbedImage struct {
-	BlobId   string    // blobid of image
-	URL      string    // ulr of image
-	UsrEmail string    // email of uploaded user
-	Uploaded time.Time // time
+	BlobSRC string // blobid of image
+	//URL      string    // ulr of image
+	UsrEmail string // email of uploaded user
+	//Uploaded time.Time // time
 }

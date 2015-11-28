@@ -11,7 +11,8 @@ var tpl *template.Template
 
 func init() {
 	r := httprouter.New()
-	r.GET("/", home)                            // root
+	r.GET("/", home) // root
+
 	r.GET("/login", login)                      // public user has requested a login.
 	r.GET("/logout", logout)                    // signed in user has requested a log out
 	r.GET("/signup", signup)                    // public user has requested a new user
@@ -19,7 +20,11 @@ func init() {
 	r.POST("/api/createuser", createUser)       // signup has posted to api
 	r.POST("/api/login", loginProcess)          // login has posted to api
 	r.GET("/api/logout", logout)                // logout has posted to api
-	r.GET("/failure", failure)                  // a step has gone awry
+
+	r.GET("/failure", failure) // a step has gone awry
+
+	r.POST("/upload", uploadToBlob) // User has submitted a file to the blob
+	r.GET("/upload", uploadForm)    // User has requested a submission
 
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
@@ -29,7 +34,7 @@ func init() {
 
 // ROOT ===================================================================================================
 
-func home(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+func home(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	//ctx := appengine.NewContext(req)
 	// get session
 	memItem, err := getSession(req)
@@ -52,6 +57,11 @@ func login(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 
 func signup(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	serveTemplate(res, req, "signup.html")
+}
+
+// BLOB ======================================================================================================
+func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	serveTemplate(res, req, "upload.html")
 }
 
 // HELPERS ===================================================================================================

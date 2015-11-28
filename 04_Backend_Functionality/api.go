@@ -81,6 +81,34 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 	}
 }
 
+/* Blobstore Section ----------------------------------------- */
+func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	ctx := appengine.NewContext(req)
+
+	// cookie, err := req.Cookie("session")
+	// // cookie is not set
+	// if err != nil {
+	// 	http.Redirect(res, req, "/failure", 302)
+	// 	return
+	// }
+
+	blobs, _, err := blobstore.ParseUpload(r)
+	if err != nil {
+		serveError(ctx, res, err)
+		return
+	}
+
+	file := blobs["file"]
+	if len(file) == 0 {
+		ctx.Errorf("no file uploaded")
+		http.Redirect(res, req, "/failure", 302)
+		return
+	}
+
+	// redirect
+	http.Redirect(res, req, "/", 302)
+}
+
 /*
    Our goal here will be to make all of the back end functionality
 
