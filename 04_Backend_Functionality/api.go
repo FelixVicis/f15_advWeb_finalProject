@@ -161,11 +161,11 @@ func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) 
 func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//user has requested to see :key image
 	ctx := appengine.NewContext(req)
-	key := datastore.NewKey(ctx, "Images", ps.ByName("blobKey"), 0, nil)
+	key := datastore.NewKey(ctx, "Images", ps.ByName("key"), 0, nil)
 	var bi blobbedImage
 	err := datastore.Get(ctx, key, &bi)
 	if err != nil {
-		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED")
+		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error()+"\nrequesting key: "+ps.ByName("key"))
 		return
 	}
 
