@@ -6,6 +6,7 @@ api.go by Allen J. Mills
     COMPLETION: mm.dd.yy
 */
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/crypto/bcrypt"
@@ -108,12 +109,41 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 		return
 	}
 
+	sess, good := getSession(req)
+	if good != nil {
+		serveTemplateWithParams(res, req, "falure.html", "IMAGE UPLOADED WITHOUT BEING LOGGED IN")
+		return
+	}
+	var sd Session
+	json.Unmarshal(sess.Value, &sd)
+
+	blobImage := blobbedImage{
+		BlobSRC:  string(file[0].BlobKey),
+		UsrEmail: sd.Email,
+	}
+	ctx := appengine.NewContext(req)
+	key := datastore.NewKey(ctx, "Images", blobImage.UsrEmail, 0, nil)
+	key, err = datastore.Put(ctx, key, &blobImage)
+	if err != nil {
+		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR")
+		return
+	}
+
 	// here is where we would tie the user to the blob file
-	http.Redirect(res, req, "/api/image/"+string(file[0].BlobKey), http.StatusFound)
+	http.Redirect(res, req, "/image/"+string(file[0].BlobKey), http.StatusFound)
 	//http.Redirect(res, req, "/", 302)
 }
 
-func apiImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+func apiGetImageURL(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	website := "https://planar-effect-857.appspot.com/image/"
+
+	bs, _ := ioutil.ReadAll(req.Body)
+	sbs := string(bs)
+
+	fmt.Fprint(res, website+sbs)
+}
+
+func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//serveTemplateWithParams(res, req, "falure.html", ps.ByName("blobKey"))
 	blobstore.Send(res, appengine.BlobKey(ps.ByName("blobKey")))
 
@@ -123,9 +153,23 @@ func apiImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) 
 
 	// next time:
 	// finish apiImage to serve as a internal call for blobkey
-	// see if this will host serve the image itself or if it's a web page.
+	// see if this will host serve the image itself or if it's a web page. **YES, RETURNS IMAGE
 	// tie this into the session and blobbedImage bits.
 	// get this into the datastore.
+}
+
+func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	//user has requested to see :key image
+	ctx := appengine.NewContext(req)
+	key := datastore.NewKey(ctx, "Images", ps.ByName("blobKey"), 0, nil)
+	var bi blobbedImage
+	err := datastore.Get(ctx, key, &bi)
+	if err != nil {
+		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED")
+		return
+	}
+
+	serveTemplateWithParams(res, req, "image.html", "https://planar-effect-857.appspot.com/image/"+bi.BlobSRC)
 }
 
 /*

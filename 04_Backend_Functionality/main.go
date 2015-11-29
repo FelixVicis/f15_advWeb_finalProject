@@ -26,7 +26,10 @@ func init() {
 	r.POST("/upload", uploadToBlob) // User has submitted a file to the blob
 	r.GET("/upload", uploadForm)    // User has requested a submission
 
-	r.GET("/api/image/:blobKey", apiImage)
+	r.GET("/image/:blobKey", getImage)
+	r.POST("/api/image", apiGetImageURL)
+
+	r.GET("/view/:key", requestImage)
 
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
