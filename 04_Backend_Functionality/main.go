@@ -29,6 +29,7 @@ func init() {
 	r.GET("/image/:blobKey", getImage)
 	r.POST("/api/image", apiGetImageURL)
 
+	r.GET("/viewAll", requestAllImage)
 	r.GET("/view/:key", requestImage)
 
 	r.GET("/TEST", testFunc)
@@ -73,5 +74,5 @@ func failure(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 }
 
 func testFunc(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
-	serveTemplateWithParams(res, req, "falure.html", ""+req.URL.String())
+	serveTemplateWithParams(res, req, "falure.html", makeImageURL(req, "this_is_a_test"))
 }

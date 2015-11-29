@@ -1,0 +1,11 @@
+{{template "header"}}
+{{template "header2" .}}
+<main>
+    <section>
+        <p>Viewing Images</p>
+        {{range .viewing}}<p>{{.data}}</p><br>{{end}}
+    </section>
+</main>
+{{template "footer"}}
+
+<!--             <img src={{.}}>-->     

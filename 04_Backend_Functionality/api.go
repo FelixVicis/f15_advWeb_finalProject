@@ -135,12 +135,10 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 }
 
 func apiGetImageURL(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	website := "https://planar-effect-857.appspot.com/image/"
-
 	bs, _ := ioutil.ReadAll(req.Body)
 	sbs := string(bs)
 
-	fmt.Fprint(res, website+sbs)
+	fmt.Fprint(res, makeImageURL(req, sbs))
 }
 
 func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
@@ -157,6 +155,9 @@ func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) 
 	// tie this into the session and blobbedImage bits.
 	// get this into the datastore.
 }
+func makeImageURL(req *http.Request, blob string) string {
+	return "https://" + req.URL.Host + "/image/" + blob
+}
 
 func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//user has requested to see :key image
@@ -169,7 +170,48 @@ func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Para
 		return
 	}
 
-	serveTemplateWithParams(res, req, "image.html", "https://planar-effect-857.appspot.com/image/"+bi.BlobSRC)
+	serveTemplateWithParams(res, req, "image.html", makeImageURL(req, bi.BlobSRC))
+}
+
+func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	//user has requested to see all images
+	sess, _ := getSession(req)
+	var sd Session
+	json.Unmarshal(sess.Value, &sd)
+
+	ctx := appengine.NewContext(req)
+	// var images []blobbedImage
+	var links []urls
+	for t := datastore.NewQuery("Images").Run(ctx); ; {
+		var x blobbedImage
+		_, err := t.Next(&x)
+		if err == datastore.Done {
+			break
+		}
+		if err != nil {
+			serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error())
+			return
+		}
+		links = append(links, urls{makeImageURL(req, x.BlobSRC)})
+	}
+	// err := datastore.Get(ctx, datastore.NewQuery("Images"), &images)
+	// if err != nil {
+	// 	serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error())
+	// 	return
+	// }
+
+	// for i, bi := range images {
+	// 	links = append(links, makeImageURL(req, bi.BlobSRC))
+	// }
+
+	sd.viewing = links
+	if sd.Email != "" {
+		sd.LoggedIn = true
+	} else {
+		sd.LoggedIn = false
+	}
+
+	serveTemplateWithParams(res, req, "imageMulti.html", sd)
 }
 
 /*
