@@ -3,9 +3,11 @@
 <main>
     <section>
         <p>Viewing Images</p>
-        {{range .viewing}}<p>{{.data}}</p><br>{{end}}
+        {{range .Viewing}}
+            <p><img src={{.}}></p><br>
+        {{end}}
     </section>
 </main>
 {{template "footer"}}
 
-<!--             <img src={{.}}>-->     
+<!-- {{range .viewing}}<p>{{.data}}</p><br>{{end}}            -->     

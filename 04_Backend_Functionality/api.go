@@ -87,6 +87,7 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 // BLOB ======================================================================================================
 
 func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// serving image upload form
 	ctx := appengine.NewContext(req)
 	uploadURL, err := blobstore.UploadURL(ctx, "/upload", nil)
 	if err != nil {
@@ -97,6 +98,7 @@ func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params)
 }
 
 func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// posting image to blob, posting blobbedImage to datastore
 	blobs, _, err := blobstore.ParseUpload(req)
 	if err != nil {
 		serveTemplateWithParams(res, req, "falure.html", "BLOB PARSE ERROR")
@@ -119,48 +121,46 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 
 	blobImage := blobbedImage{
 		BlobSRC:  string(file[0].BlobKey),
+		URL:      sd.UserName,
 		UsrEmail: sd.Email,
+		Uploaded: file[0].CreationTime,
 	}
 	ctx := appengine.NewContext(req)
-	key := datastore.NewKey(ctx, "Images", blobImage.UsrEmail, 0, nil)
+	key := datastore.NewKey(ctx, "Images", blobImage.URL, 0, nil)
 	key, err = datastore.Put(ctx, key, &blobImage)
 	if err != nil {
 		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR")
 		return
 	}
 
-	// here is where we would tie the user to the blob file
 	http.Redirect(res, req, "/image/"+string(file[0].BlobKey), http.StatusFound)
 	//http.Redirect(res, req, "/", 302)
 }
 
+func makeImageURL(req *http.Request, blob string) string {
+	// helper to turn blob into image request string
+	return "https://" + req.URL.Host + "/image/" + blob
+}
+
+func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
+	// requesting an image based on blob key
+	blobstore.Send(res, appengine.BlobKey(ps.ByName("blobKey")))
+}
+
 func apiGetImageURL(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	// change blob to url as API call
 	bs, _ := ioutil.ReadAll(req.Body)
 	sbs := string(bs)
 
 	fmt.Fprint(res, makeImageURL(req, sbs))
 }
 
-func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
-	//serveTemplateWithParams(res, req, "falure.html", ps.ByName("blobKey"))
-	blobstore.Send(res, appengine.BlobKey(ps.ByName("blobKey")))
-
-	// we've left off here. we can now, using a blobkey, request an image.
-	// I 'think' this will work as an independant call inside a webpage for hosting.
-	// we will see.
-
-	// next time:
-	// finish apiImage to serve as a internal call for blobkey
-	// see if this will host serve the image itself or if it's a web page. **YES, RETURNS IMAGE
-	// tie this into the session and blobbedImage bits.
-	// get this into the datastore.
-}
-func makeImageURL(req *http.Request, blob string) string {
-	return "https://" + req.URL.Host + "/image/" + blob
-}
-
 func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//user has requested to see :key image
+	// sess, _ := getSession(req) // get user info, if exists
+	// var sd Session
+	// json.Unmarshal(sess.Value, &sd)
+
 	ctx := appengine.NewContext(req)
 	key := datastore.NewKey(ctx, "Images", ps.ByName("key"), 0, nil)
 	var bi blobbedImage
@@ -169,6 +169,13 @@ func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Para
 		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error()+"\nrequesting key: "+ps.ByName("key"))
 		return
 	}
+
+	// sd.Viewing = append(sd.viewing, makeImageURL(req, bi.BlobSRC))
+	// if sd.Email != "" {
+	// 	sd.LoggedIn = true
+	// } else {
+	// 	sd.LoggedIn = false
+	// }
 
 	serveTemplateWithParams(res, req, "image.html", makeImageURL(req, bi.BlobSRC))
 }
@@ -181,7 +188,7 @@ func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.P
 
 	ctx := appengine.NewContext(req)
 	// var images []blobbedImage
-	var links []urls
+	var links []string
 	for t := datastore.NewQuery("Images").Run(ctx); ; {
 		var x blobbedImage
 		_, err := t.Next(&x)
@@ -192,7 +199,7 @@ func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.P
 			serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error())
 			return
 		}
-		links = append(links, urls{makeImageURL(req, x.BlobSRC)})
+		links = append(links, makeImageURL(req, x.BlobSRC))
 	}
 	// err := datastore.Get(ctx, datastore.NewQuery("Images"), &images)
 	// if err != nil {
@@ -204,7 +211,7 @@ func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.P
 	// 	links = append(links, makeImageURL(req, bi.BlobSRC))
 	// }
 
-	sd.viewing = links
+	sd.Viewing = links
 	if sd.Email != "" {
 		sd.LoggedIn = true
 	} else {
@@ -213,6 +220,16 @@ func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.P
 
 	serveTemplateWithParams(res, req, "imageMulti.html", sd)
 }
+
+// we've left off here. we can now, using a blobkey, request an image.
+// I 'think' this will work as an independant call inside a webpage for hosting.
+// we will see.
+
+// next time:
+// finish apiImage to serve as a internal call for blobkey
+// see if this will host serve the image itself or if it's a web page. **YES, RETURNS IMAGE
+// tie this into the session and blobbedImage bits.
+// get this into the datastore.
 
 /*
    Our goal here will be to make all of the back end functionality

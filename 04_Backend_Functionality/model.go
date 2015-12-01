@@ -8,7 +8,7 @@ model.go by Allen J. Mills
     This will serve as the file holding
     the structures for our application.
 */
-//import "time"
+import "time"
 
 type User struct {
 	Email    string
@@ -17,8 +17,8 @@ type User struct {
 }
 
 type blobbedImage struct {
-	BlobSRC string // blobid of image
-	//URL      string    // ulr of image
-	UsrEmail string // email of uploaded user
-	//Uploaded time.Time // time
+	BlobSRC  string    // blobid of image
+	URL      string    // ulr of image
+	UsrEmail string    // email of uploaded user
+	Uploaded time.Time // time
 }

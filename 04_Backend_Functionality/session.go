@@ -18,14 +18,10 @@ import (
 	"net/http"
 )
 
-type urls struct {
-	data string
-}
-
 type Session struct {
 	User
 	LoggedIn bool
-	viewing  []urls // list of urls for the images
+	Viewing  []string // list of urls for the images
 }
 
 func createSession(res http.ResponseWriter, req *http.Request, user User) {
