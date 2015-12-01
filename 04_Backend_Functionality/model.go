@@ -3,7 +3,7 @@ package main
 /*
 model.go by Allen J. Mills
     CREATION: 11.17.15
-    COMPLETION: mm.dd.yy
+    COMPLETION: 12.1.15
 
     This will serve as the file holding
     the structures for our application.

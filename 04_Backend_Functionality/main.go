@@ -32,8 +32,6 @@ func init() {
 	r.GET("/viewAll", requestAllImage)
 	r.GET("/view/:key", requestImage)
 
-	r.GET("/TEST", testFunc)
-
 	http.Handle("/public/", http.StripPrefix("/public", http.FileServer(http.Dir("public/"))))
 	http.Handle("/", r)
 
@@ -43,8 +41,6 @@ func init() {
 // ROOT ===================================================================================================
 
 func home(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	//ctx := appengine.NewContext(req)
-	// get session
 	memItem, err := getSession(req)
 	var sd Session
 	if err == nil {
@@ -71,8 +67,4 @@ func signup(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 
 func failure(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	serveTemplateWithParams(res, req, "falure.html", "NO MESSAGE AVAILABLE")
-}
-
-func testFunc(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
-	serveTemplateWithParams(res, req, "falure.html", makeImageURL(req, "this_is_a_test"))
 }

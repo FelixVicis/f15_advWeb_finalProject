@@ -4,10 +4,12 @@
     <section>
         <p>Viewing Images</p>
         {{range .Viewing}}
-            <p><img src={{.}}></p><br>
+            <section>
+            <img src={{.BlobSRC}}>
+            <p>Uploaded by: {{.URL}}</p>
+            <p>On: {{.Uploaded}}</p>
+            </section>
         {{end}}
     </section>
 </main>
 {{template "footer"}}
-
-<!-- {{range .viewing}}<p>{{.data}}</p><br>{{end}}            -->     

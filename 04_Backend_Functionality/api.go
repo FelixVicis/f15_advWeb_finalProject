@@ -3,7 +3,7 @@ package main
 /*
 api.go by Allen J. Mills
     CREATION: 11.17.15
-    COMPLETION: mm.dd.yy
+    COMPLETION: 12.1.15
 */
 import (
 	"encoding/json"
@@ -25,11 +25,7 @@ func loginProcess(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 	var user User
 	err := datastore.Get(ctx, key, &user)
 	if err != nil || bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.FormValue("password"))) != nil {
-		// failure logging in
-		http.Redirect(res, req, "/failure", 302)
-		// var sd Session
-		// sd.LoginFail = true
-		// tpl.ExecuteTemplate(res, "login.html", sd)
+		serveTemplateWithParams(res, req, "falure.html", "YOUR PASSWORD DOES NOT MATCH")
 		return
 	} else {
 		user.UserName = req.FormValue("userName")
@@ -89,43 +85,51 @@ func checkUserName(res http.ResponseWriter, req *http.Request, _ httprouter.Para
 func uploadForm(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// serving image upload form
 	ctx := appengine.NewContext(req)
-	uploadURL, err := blobstore.UploadURL(ctx, "/upload", nil)
+	uploadURL, err := blobstore.UploadURL(ctx, "/upload", nil) // setting up the post call for blobstore.
 	if err != nil {
-		serveTemplateWithParams(res, req, "falure.html", "BLOB URL ERROR")
+		serveTemplateWithParams(res, req, "falure.html", "BLOB URL ERROR") // there was an issue making the post call
 		return
 	}
+
+	_, err = getSession(req)
+	if err != nil {
+		serveTemplateWithParams(res, req, "falure.html", "YOU MAY NOT SUBMIT FILES WITHOUT BEING LOGGED IN") // there was an issue making the post call
+		return
+	}
+
 	serveTemplateWithParams(res, req, "upload.html", uploadURL)
 }
 
 func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	// posting image to blob, posting blobbedImage to datastore
-	blobs, _, err := blobstore.ParseUpload(req)
+	blobs, _, err := blobstore.ParseUpload(req) // from request, take and parse the blobs from the form.
 	if err != nil {
-		serveTemplateWithParams(res, req, "falure.html", "BLOB PARSE ERROR")
+		serveTemplateWithParams(res, req, "falure.html", "BLOB PARSE ERROR") // something went wrong with the parse
 		return
 	}
 
-	file := blobs["file"]
-	if len(file) == 0 {
+	file := blobs["file"] // okay. have blobs now.
+	if len(file) == 0 {   // are there any files?
 		serveTemplateWithParams(res, req, "falure.html", "NO BLOBS FOUND")
 		return
 	}
 
-	sess, good := getSession(req)
+	sess, good := getSession(req) // ensure that there is a good session.
 	if good != nil {
-		serveTemplateWithParams(res, req, "falure.html", "IMAGE UPLOADED WITHOUT BEING LOGGED IN")
+		serveTemplateWithParams(res, req, "falure.html", "LOGIN TOKEN HAS EXPIRED, CANNOT PROCESS IMAGE")
 		return
 	}
 	var sd Session
 	json.Unmarshal(sess.Value, &sd)
 
-	blobImage := blobbedImage{
-		BlobSRC:  string(file[0].BlobKey),
+	blobImage := blobbedImage{ // make the blob based on what we took in.
+		BlobSRC:  makeImageURL(req, string(file[0].BlobKey)),
 		URL:      sd.UserName,
 		UsrEmail: sd.Email,
 		Uploaded: file[0].CreationTime,
 	}
-	ctx := appengine.NewContext(req)
+
+	ctx := appengine.NewContext(req) // prep and submit to datastore
 	key := datastore.NewKey(ctx, "Images", blobImage.URL, 0, nil)
 	key, err = datastore.Put(ctx, key, &blobImage)
 	if err != nil {
@@ -133,7 +137,7 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 		return
 	}
 
-	http.Redirect(res, req, "/image/"+string(file[0].BlobKey), http.StatusFound)
+	http.Redirect(res, req, "/view/"+blobImage.URL, http.StatusFound)
 	//http.Redirect(res, req, "/", 302)
 }
 
@@ -157,39 +161,26 @@ func apiGetImageURL(res http.ResponseWriter, req *http.Request, _ httprouter.Par
 
 func requestImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//user has requested to see :key image
-	// sess, _ := getSession(req) // get user info, if exists
-	// var sd Session
-	// json.Unmarshal(sess.Value, &sd)
-
 	ctx := appengine.NewContext(req)
-	key := datastore.NewKey(ctx, "Images", ps.ByName("key"), 0, nil)
+	key := datastore.NewKey(ctx, "Images", ps.ByName("key"), 0, nil) // request datastore info on image
 	var bi blobbedImage
 	err := datastore.Get(ctx, key, &bi)
 	if err != nil {
 		serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error()+"\nrequesting key: "+ps.ByName("key"))
 		return
 	}
-
-	// sd.Viewing = append(sd.viewing, makeImageURL(req, bi.BlobSRC))
-	// if sd.Email != "" {
-	// 	sd.LoggedIn = true
-	// } else {
-	// 	sd.LoggedIn = false
-	// }
-
-	serveTemplateWithParams(res, req, "image.html", makeImageURL(req, bi.BlobSRC))
+	serveTemplateWithParams(res, req, "image.html", bi) // got it? good. send image out.
 }
 
 func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
 	//user has requested to see all images
-	sess, _ := getSession(req)
+	sess, _ := getSession(req) // get login info if exists.
 	var sd Session
 	json.Unmarshal(sess.Value, &sd)
 
 	ctx := appengine.NewContext(req)
-	// var images []blobbedImage
-	var links []string
-	for t := datastore.NewQuery("Images").Run(ctx); ; {
+	var links []blobbedImage
+	for t := datastore.NewQuery("Images").Run(ctx); ; { /// get all images in Images from datastore
 		var x blobbedImage
 		_, err := t.Next(&x)
 		if err == datastore.Done {
@@ -199,37 +190,18 @@ func requestAllImage(res http.ResponseWriter, req *http.Request, ps httprouter.P
 			serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error())
 			return
 		}
-		links = append(links, makeImageURL(req, x.BlobSRC))
+		links = append(links, x)
 	}
-	// err := datastore.Get(ctx, datastore.NewQuery("Images"), &images)
-	// if err != nil {
-	// 	serveTemplateWithParams(res, req, "falure.html", "INTERNAL DATASTORE ERROR, IMAGE REQUEST FAILED\nERROR: "+err.Error())
-	// 	return
-	// }
 
-	// for i, bi := range images {
-	// 	links = append(links, makeImageURL(req, bi.BlobSRC))
-	// }
-
-	sd.Viewing = links
-	if sd.Email != "" {
+	sd.Viewing = links  // add the images to our session data.
+	if sd.Email != "" { // do a quick logged in check.
 		sd.LoggedIn = true
 	} else {
 		sd.LoggedIn = false
 	}
 
-	serveTemplateWithParams(res, req, "imageMulti.html", sd)
+	serveTemplateWithParams(res, req, "imageMulti.html", sd) // serve.
 }
-
-// we've left off here. we can now, using a blobkey, request an image.
-// I 'think' this will work as an independant call inside a webpage for hosting.
-// we will see.
-
-// next time:
-// finish apiImage to serve as a internal call for blobkey
-// see if this will host serve the image itself or if it's a web page. **YES, RETURNS IMAGE
-// tie this into the session and blobbedImage bits.
-// get this into the datastore.
 
 /*
    Our goal here will be to make all of the back end functionality

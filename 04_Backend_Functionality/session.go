@@ -21,7 +21,7 @@ import (
 type Session struct {
 	User
 	LoggedIn bool
-	Viewing  []string // list of urls for the images
+	Viewing  []blobbedImage // list of urls for the images
 }
 
 func createSession(res http.ResponseWriter, req *http.Request, user User) {
