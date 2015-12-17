@@ -1,0 +1,15 @@
+{{template "header"}}
+{{template "header2" .}}
+<main>
+    <section>
+        <p>Viewing Images</p>
+        {{range .Viewing}}
+            <section>
+            <img src={{.BlobSRC}}>
+            <p>Uploaded by: {{.URL}}</p>
+            <p>On: {{.Uploaded}}</p>
+            </section>
+        {{end}}
+    </section>
+</main>
+{{template "footer"}}

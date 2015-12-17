@@ -1,0 +1,8 @@
+{{template "header"}}
+<!--THAT DATA IS NOT SESSION DATA, DO NOT EDIT!!-->
+<p>Choose Image to Upload</p>
+<form action="{{.}}" method="POST" enctype="multipart/form-data">
+    Upload File: <input type="file" name="file"><br>
+    <input type="submit" name="submit" value="Submit">
+</form>
+{{template "footer"}}
