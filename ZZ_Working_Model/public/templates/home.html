@@ -2,7 +2,15 @@
 {{template "header2" .}}
 <main>
     <section>
-        <p>Body</p>
+        {{if .LoggedIn}}
+        <div class='actions'>
+            <a href="/upload" class='loginOut'>Upload</a>
+            <a href="/viewAll" class='loginOut'>View</a>
+        </div>
+
+        {{else}}
+        <p>Login to begin!</p>
+        {{end}}
     </section>
 </main>
 {{template "footer"}}

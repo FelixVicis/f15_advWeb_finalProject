@@ -5,24 +5,29 @@
     <meta charset="UTF-8">
     <title>HOME</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="public/scripts/stylesheet.css"/>
+    <link rel="shortcut icon" type="image/png" href="public/images/favicon.png">
+    <!-- Link HTML file to CSS file by adding a link (self closing tag) with 3 attributes: -->
+    <!-- type="text/css", rel="stylesheet", href="path to css file" -->
+    <title>Pic Me!</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
 {{end}}
 
 {{define "header2"}}
 <body>
 <div id="top">
-    <header>
-        <a href="/">HOME</a>
-        <nav>
-            {{if .LoggedIn}}
-            <p>You are logged in, {{.User.UserName}}</p>
-            <p><a href="/logout"><p class="loginOut">Log Out</p></a></p>
-            {{else}}
-            <a href="/login"><p class="loginOut">Log In</p></a>
-            {{end}}
-        </nav>
-        <p>SAVED DATA: {{.}}</p>
-    </header>
+    <nav>
+        <a href="/" class='loginOut'>HOME</a>
+        {{if .LoggedIn}}
+        <p class = 'status'>You are logged in, {{.User.UserName}}</p>
+        <div class='loginOutcontainer'><a href="/logout" class="loginOut">Log Out</a></div>
+        {{else}}
+        <a href="/login" class="loginOut">Log In</a>
+        {{end}}
+    </nav>
 </div>
 {{end}}
 
