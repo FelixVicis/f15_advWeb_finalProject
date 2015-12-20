@@ -1,0 +1,3 @@
+Upload functionality in api.go
+View and viewAll functionality in api.go
+All parts have been stitched together
