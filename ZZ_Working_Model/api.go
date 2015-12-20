@@ -143,7 +143,7 @@ func uploadToBlob(res http.ResponseWriter, req *http.Request, _ httprouter.Param
 
 func makeImageURL(req *http.Request, blob string) string {
 	// helper to turn blob into image request string
-	return "https://" + req.URL.Host + "/image/" + blob
+	return "http://" + req.URL.Host + "/image/" + blob
 }
 
 func getImage(res http.ResponseWriter, req *http.Request, ps httprouter.Params) {
